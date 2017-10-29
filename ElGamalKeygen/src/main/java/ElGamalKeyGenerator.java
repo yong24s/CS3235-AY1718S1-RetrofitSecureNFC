@@ -91,7 +91,7 @@ public class ElGamalKeyGenerator {
     }
 
     public static void main(String[] args) {
-        final int bits = 512;
+        final int bits = 256;
         System.out.printf("Generating %d bit keys...\n\n", bits);
 
         List<List<BigInteger>> pksk = KeyGen(bits);

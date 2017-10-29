@@ -1,3 +1,4 @@
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -62,6 +63,22 @@ public class ElGamalVerifier {
         System.out.print("m: ");
         String m = sc.nextLine();
 
-        System.out.println(verify(m, r, s, h, p, g));
+        System.out.println("Verifiable: " + verify(m, r, s, h, p, g));
+        
+        System.out.println("Compressing....");
+        
+        
+//        BigInteger(String val, int radix)
+        
+        String compressed = String.format("%s?r=%s&s=%s", m, r.toString(Character.MAX_RADIX), s.toString(Character.MAX_RADIX));
+        System.out.println(compressed);
+        
+        try {
+            byte[] utf8Bytes = compressed.getBytes("UTF-8");
+            System.out.println("Payload size: " + (utf8Bytes.length - 2) + " bytes"); //-2  as http:// not in actual payload.
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }
