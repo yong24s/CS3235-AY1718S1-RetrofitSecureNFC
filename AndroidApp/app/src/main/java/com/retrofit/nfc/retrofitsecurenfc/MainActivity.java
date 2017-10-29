@@ -24,19 +24,12 @@ import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.util.Log;
 
-
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     public static final String MIME_TEXT_PLAIN = "text/plain";
-    public static final String TAG = "NfcDemo";
-
-    private LinkedHashMap<String, PublicKey> publicKeyMap;
 
     private TextView mTextView;
     private NfcAdapter mNfcAdapter;
-
-    private IntentFilter[] intentFiltersArray;
-    private String[][] techListsArray;
-    private PendingIntent pendingIntent;
+    private LinkedHashMap<String, PublicKey> publicKeyMap;
 
     private void init() {
         String[] keys = this.getResources().getStringArray(R.array.publickeys_domain);
@@ -55,31 +48,13 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         mTextView = (TextView) findViewById(R.id.textView_explanation);
-
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-
-        pendingIntent = PendingIntent.getActivity(
-                this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-
-
-        IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
-        try {
-            ndef.addDataType("*/*");    /* Handles all MIME based dispatches.
-                                       You should specify only the ones that you need. */
-        }
-        catch (MalformedMimeTypeException e) {
-            throw new RuntimeException("fail", e);
-        }
-        intentFiltersArray = new IntentFilter[] {ndef, };
-        techListsArray = new String[][] { new String[] { android.nfc.tech.Ndef.class.getName() } };
-
 
         if (mNfcAdapter == null) {
             // Stop here, we definitely need NFC
             Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show();
             finish();
             return;
-
         }
 
         if (!mNfcAdapter.isEnabled()) {
@@ -89,7 +64,6 @@ public class MainActivity extends Activity {
         }
 
         init();
-
         handleIntent(getIntent());
     }
 
@@ -101,9 +75,8 @@ public class MainActivity extends Activity {
          * It's important, that the activity is in the foreground (resumed). Otherwise
          * an IllegalStateException is thrown.
          */
-        mNfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFiltersArray, techListsArray);
-//        setupForegroundDispatch(this, mNfcAdapter);
-
+        //mNfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFiltersArray, techListsArray);
+        setupForegroundDispatch(this, mNfcAdapter);
     }
 
     @Override
@@ -111,8 +84,7 @@ public class MainActivity extends Activity {
         /**
          * Call this before onPause, otherwise an IllegalArgumentException is thrown as well.
          */
-//        stopForegroundDispatch(this, mNfcAdapter);
-        mNfcAdapter.disableForegroundDispatch(this);
+        stopForegroundDispatch(this, mNfcAdapter);
         super.onPause();
     }
 
@@ -126,10 +98,6 @@ public class MainActivity extends Activity {
          * In our case this method gets called, when the user attaches a Tag to the device.
          */
         handleIntent(intent);
-
-//        Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-//        String type = intent.getType();
-//        Toast.makeText(this, type, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -140,17 +108,20 @@ public class MainActivity extends Activity {
         final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
+        final PendingIntent pendingIntent =
+                PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
 
         IntentFilter[] filters = new IntentFilter[1];
         String[][] techList = new String[][]{};
+//        String[][] techList = new String[][]{new String[] { android.nfc.tech.Ndef.class.getName() }};
 
         // Notice that this is the same filter as in our manifest.
         filters[0] = new IntentFilter();
         filters[0].addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
         filters[0].addCategory(Intent.CATEGORY_DEFAULT);
         try {
-            filters[0].addDataType(MIME_TEXT_PLAIN);
+//            filters[0].addDataType(MIME_TEXT_PLAIN);
+            filters[0].addDataType("*/*");
         } catch (MalformedMimeTypeException e) {
             throw new RuntimeException("Check your mime type.");
         }
@@ -168,16 +139,8 @@ public class MainActivity extends Activity {
 
     private void handleIntent(Intent intent) {
         String action = intent.getAction();
-//
-//        Toast.makeText(this, action, Toast.LENGTH_LONG).show();
-//
 
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
-
-            String type = intent.getType();
-
-//            Toast.makeText(this, type, Toast.LENGTH_LONG).show();
-
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             new NdefReaderTask().execute(tag);
 
@@ -196,8 +159,6 @@ public class MainActivity extends Activity {
             String[] techList = tag.getTechList();
             String searchedTech = Ndef.class.getName();
 
-
-
             for (String tech : techList) {
                 if (searchedTech.equals(tech)) {
                     new NdefReaderTask().execute(tag);
@@ -207,13 +168,6 @@ public class MainActivity extends Activity {
         }
     }
 
-
-    /**
-     * Background task for reading the data. Do not block the UI thread while reading.
-     *
-     * @author Ralf Wondratschek
-     *
-     */
     private class NdefReaderTask extends AsyncTask<Tag, Void, String> {
 
         @Override
@@ -221,31 +175,26 @@ public class MainActivity extends Activity {
             Tag tag = params[0];
 
             Ndef ndef = Ndef.get(tag);
+
             if (ndef == null) {
                 // NDEF is not supported by this Tag.
                 return null;
             }
 
             NdefMessage ndefMessage = ndef.getCachedNdefMessage();
-
             NdefRecord[] records = ndefMessage.getRecords();
-            for (NdefRecord ndefRecord : records) {
-                if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
-                    try {
-                        return readText(ndefRecord);
-                    } catch (UnsupportedEncodingException e) {
-                        Log.e(TAG, "Unsupported Encoding", e);
-                    }
-                } else if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_URI)) {
 
-                    try {
+            for (NdefRecord ndefRecord : records) {
+                try {
+                    if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
+                        return readText(ndefRecord);
+                    } else if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_URI)) {
                         return readURL(ndefRecord);
-                    } catch (UnsupportedEncodingException e) {
-                        Log.e(TAG, "Unsupported Encoding", e);
                     }
+                } catch (UnsupportedEncodingException e) {
+                    Log.e("RetrofitSecureNFC", "Unsupported Encoding", e);
                 }
             }
-
             return null;
         }
 
