@@ -281,9 +281,20 @@ public class MainActivity extends Activity {
             ElGamalVerifier verifier = new ElGamalVerifier(publicKeyMap);
 
             if (verifier.verify(url.toString())) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(MainActivity.this, ":D This NFC Tag is verified! Opening it...", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
                 Intent launchBrowser = new Intent(Intent.ACTION_VIEW, url);
                 startActivity(launchBrowser);
             } else {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(MainActivity.this, ":( This NFC Tag cannot be verified...", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
 
             return url.toString();

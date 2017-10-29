@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">RetrofitSecureNFC</string>
-    <string name="explanation">HELLO TESTINGF</string>
-
+    <string name="explanation">Scan a NFC TAG</string>
 </resources>
