@@ -266,9 +266,15 @@ public class MainActivity extends Activity {
                 startActivity(launchBrowser);
             }
 
-
             return url.toString();
         }
+
+        private boolean isAuthentic(String url) {
+
+
+            return false;
+        }
+
 
         @Override
         protected void onPostExecute(String result) {
