@@ -15,6 +15,8 @@ import android.content.IntentFilter.MalformedMimeTypeException;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.Tag;
@@ -27,12 +29,25 @@ public class MainActivity extends Activity {
     public static final String MIME_TEXT_PLAIN = "text/plain";
     public static final String TAG = "NfcDemo";
 
+    private LinkedHashMap<String, PublicKey> publicKeyMap;
+
     private TextView mTextView;
     private NfcAdapter mNfcAdapter;
 
     private IntentFilter[] intentFiltersArray;
     private String[][] techListsArray;
     private PendingIntent pendingIntent;
+
+    private void init() {
+        String[] keys = this.getResources().getStringArray(R.array.publickeys_domain);
+        String[] values = this.getResources().getStringArray(R.array.publickeys_p_g_h);
+
+        publicKeyMap = new LinkedHashMap<String,PublicKey>();
+
+        for (int i = 0; i < Math.min(keys.length, values.length); ++i) {
+            publicKeyMap.put(keys[i], new PublicKey(values[i]));
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +87,8 @@ public class MainActivity extends Activity {
         } else {
             mTextView.setText(R.string.explanation);
         }
+
+        init();
 
         handleIntent(getIntent());
     }
@@ -159,7 +176,7 @@ public class MainActivity extends Activity {
 
             String type = intent.getType();
 
-            Toast.makeText(this, type, Toast.LENGTH_LONG).show();
+//            Toast.makeText(this, type, Toast.LENGTH_LONG).show();
 
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             new NdefReaderTask().execute(tag);
@@ -261,20 +278,16 @@ public class MainActivity extends Activity {
         private String readURL(NdefRecord record) throws UnsupportedEncodingException {
             Uri url = record.toUri();
 
-            if (false) {
+            ElGamalVerifier verifier = new ElGamalVerifier(publicKeyMap);
+
+            if (verifier.verify(url.toString())) {
                 Intent launchBrowser = new Intent(Intent.ACTION_VIEW, url);
                 startActivity(launchBrowser);
+            } else {
             }
 
             return url.toString();
         }
-
-        private boolean isAuthentic(String url) {
-
-
-            return false;
-        }
-
 
         @Override
         protected void onPostExecute(String result) {
