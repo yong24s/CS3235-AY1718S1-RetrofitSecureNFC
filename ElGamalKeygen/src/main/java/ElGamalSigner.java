@@ -9,9 +9,6 @@ import java.util.Scanner;
 public class ElGamalSigner {
 
     public static Pair<BigInteger, BigInteger> sign(String m, BigInteger p, BigInteger g, BigInteger x) {
-        // Choose a random k such that 1 < k < p − 1 and gcd(k, p − 1) = 1
-        Random rand = new SecureRandom();
-
         BigInteger p_minus_1 = p.subtract(BigInteger.ONE);
         int nlen = p_minus_1.bitLength();
 
@@ -21,7 +18,8 @@ public class ElGamalSigner {
 
         do {
             do {
-                k = new BigInteger(nlen, rand);
+                // Choose a random k such that 1 < k < p − 1 and gcd(k, p − 1) = 1                
+                k = new BigInteger(nlen, new SecureRandom());
             } while (!k.gcd(p_minus_1).equals(BigInteger.ONE));
 
             // Compute r === g^k (mod p)

@@ -1,7 +1,4 @@
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,20 +34,20 @@ public class ElGamalKeyGenerator {
     public static List<List<BigInteger>> KeyGen(int n) {
         // (a) take a random prime p with getPrime() function. p = 2 * p' + 1
         // with prime(p') = true
-        BigInteger p = getPrime(n, 40, new Random());
+        BigInteger p = getPrime(n, 256, new SecureRandom());
         // (b) take a random element in [Z/Z[p]]* (p' order)
-        BigInteger g = randNum(p, new Random());
+        BigInteger g = randNum(p, new SecureRandom());
         BigInteger pPrime = p.subtract(BigInteger.ONE).divide(ElGamal.TWO);
 
         while (!g.modPow(pPrime, p).equals(BigInteger.ONE)) {
             if (g.modPow(pPrime.multiply(ElGamal.TWO), p).equals(BigInteger.ONE))
                 g = g.modPow(TWO, p);
             else
-                g = randNum(p, new Random());
+                g = randNum(p, new SecureRandom());
         }
 
         // (c) take x random in [0, p' - 1]
-        BigInteger x = randNum(pPrime.subtract(BigInteger.ONE), new Random());
+        BigInteger x = randNum(pPrime.subtract(BigInteger.ONE), new SecureRandom());
         BigInteger h = g.modPow(x, p);
         // secret key is (p, x) and public key is (p, g, h)
         List<BigInteger> sk = new ArrayList<BigInteger>(Arrays.asList(p, x));
