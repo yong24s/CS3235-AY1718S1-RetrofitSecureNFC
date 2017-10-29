@@ -247,7 +247,7 @@ public final class ElGamal { // TODO extends Cryptosystem
     }
 
     public static void main(String[] args) {
-        List<List<BigInteger>> pksk = ElGamal.KeyGen(256);
+        List<List<BigInteger>> pksk = ElGamal.KeyGen(512);
         // public key
         BigInteger p = pksk.get(0).get(0);
         BigInteger g = pksk.get(0).get(1);
@@ -261,7 +261,7 @@ public final class ElGamal { // TODO extends Cryptosystem
         // System.out.println("Decrypted : " + ElGamal.Decrypt_homomorphe(p_sk,
         // x, g, encrypt.get(0), encrypt.get(1)));
 
-        String m = "hello_world!3230";
+        String m = "http://www.google.com/";
         
         Pair<BigInteger, BigInteger> rs = sign(m, p, g, x);
         
