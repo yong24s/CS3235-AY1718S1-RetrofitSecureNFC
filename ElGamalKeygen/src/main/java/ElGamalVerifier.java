@@ -17,16 +17,16 @@ public class ElGamalVerifier {
 
         BigInteger rhs = (y.modPow(r, p)).multiply(r.modPow(s, p));
         rhs = rhs.mod(p);
-        BigInteger hOfM = new BigInteger(SHA256(m));
+        BigInteger hOfM = new BigInteger(SHA384(m));
         BigInteger lhs = g.modPow(hOfM, p);
         return lhs.equals(rhs);
     }
 
-    public static byte[] SHA256(String str) {
+    public static byte[] SHA384(String str) {
 
         try {
             MessageDigest digest;
-            digest = MessageDigest.getInstance("SHA-256");
+            digest = MessageDigest.getInstance("SHA-384");
             return digest.digest(str.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
             // TODO Auto-generated catch block

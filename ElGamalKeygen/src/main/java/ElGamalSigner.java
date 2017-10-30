@@ -26,7 +26,7 @@ public class ElGamalSigner {
             r = g.modPow(k, p);
 
             // Compute s === (H(m) - xr)k^-1 (mod p - 1)
-            BigInteger hOfM = new BigInteger(SHA256(m));
+            BigInteger hOfM = new BigInteger(SHA384(m));
             BigInteger xr = x.multiply(r);
             // H(m) - xr
             BigInteger HOfM_minus_xr = hOfM.subtract(xr);
@@ -39,11 +39,11 @@ public class ElGamalSigner {
         return new Pair<BigInteger, BigInteger>(r, s);
     }
 
-    public static byte[] SHA256(String str) {
+    public static byte[] SHA384(String str) {
 
         try {
             MessageDigest digest;
-            digest = MessageDigest.getInstance("SHA-256");
+            digest = MessageDigest.getInstance("SHA-384");
             return digest.digest(str.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
             // TODO Auto-generated catch block

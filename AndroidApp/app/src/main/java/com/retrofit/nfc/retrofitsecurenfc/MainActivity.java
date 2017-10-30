@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         filters[0] = new IntentFilter();
         filters[0].addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
         filters[0].addCategory(Intent.CATEGORY_DEFAULT);
+
         try {
 //            filters[0].addDataType(MIME_TEXT_PLAIN);
             filters[0].addDataType("*/*");
@@ -143,15 +144,6 @@ public class MainActivity extends AppCompatActivity {
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             new NdefReaderTask().execute(tag);
-
-//            if (MIME_TEXT_PLAIN.equals(type)) {
-//
-//                Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-//                new NdefReaderTask().execute(tag);
-//
-//            } else {
-//                Log.d(TAG, "Wrong mime type: " + type);
-//            }
         } else if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
 
             // In case we would still use the Tech Discovered Intent
