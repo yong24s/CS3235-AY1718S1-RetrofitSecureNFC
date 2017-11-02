@@ -33,7 +33,13 @@ public class ElGamalVerifier {
 
         if (domain != "" && r != "" && s != "") {
             PublicKey pk = publicKeyMap.get(domain);
-            return verify(simpleUrlTrim(url), new BigInteger(r, Character.MAX_RADIX), new BigInteger(s, Character.MAX_RADIX), pk.h, pk.p, pk.g);
+
+            //This scenario where pk is null should never happen
+            //As we need to register all domains we can handle,
+            //the domain must have a public key in our hashtable
+            if (pk != null) {
+                return verify(simpleUrlTrim(url), new BigInteger(r, Character.MAX_RADIX), new BigInteger(s, Character.MAX_RADIX), pk.h, pk.p, pk.g);
+            }
         }
 
         return false;
@@ -68,16 +74,17 @@ public class ElGamalVerifier {
 
         // 0 < r < p
         // 0 < s < p-1
+        //Ensure inputs are in correct range before we verify or else we can skip this
         if (r.compareTo(BigInteger.ZERO) == 1 && p.compareTo(r) == 1 && s.compareTo(BigInteger.ZERO) == 1
                 && p.subtract(BigInteger.ONE).compareTo(s) == 1) {
-            System.out.println("Inputs are in correct range");
+            BigInteger rhs = (y.modPow(r, p)).multiply(r.modPow(s, p));
+            rhs = rhs.mod(p);
+            BigInteger hOfM = new BigInteger(SHA256(m));
+            BigInteger lhs = g.modPow(hOfM, p);
+            return lhs.equals(rhs);
         }
 
-        BigInteger rhs = (y.modPow(r, p)).multiply(r.modPow(s, p));
-        rhs = rhs.mod(p);
-        BigInteger hOfM = new BigInteger(SHA256(m));
-        BigInteger lhs = g.modPow(hOfM, p);
-        return lhs.equals(rhs);
+        return false;
     }
 
     private static byte[] SHA256(String str) {
