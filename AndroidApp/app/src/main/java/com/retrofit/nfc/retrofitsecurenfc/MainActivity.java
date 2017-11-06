@@ -1,5 +1,6 @@
 package com.retrofit.nfc.retrofitsecurenfc;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -29,17 +30,16 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mTextView;
     private NfcAdapter mNfcAdapter;
-    private LinkedHashMap<String, PublicKey> publicKeyMap;
 
     private void init() {
-        String[] keys = this.getResources().getStringArray(R.array.publickeys_domain);
-        String[] values = this.getResources().getStringArray(R.array.publickeys_p_g_h);
-
-        publicKeyMap = new LinkedHashMap<String,PublicKey>();
-
-        for (int i = 0; i < Math.min(keys.length, values.length); ++i) {
-            publicKeyMap.put(keys[i], new PublicKey(values[i]));
-        }
+//        String[] keys = this.getResources().getStringArray(R.array.publickeys_domain);
+//        String[] values = this.getResources().getStringArray(R.array.publickeys_p_g_h);
+//
+//        publicKeyMap = new LinkedHashMap<String,PublicKey>();
+//
+//        for (int i = 0; i < Math.min(keys.length, values.length); ++i) {
+//            publicKeyMap.put(keys[i], new PublicKey(values[i]));
+//        }
     }
 
     @Override
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            new NdefReaderTask().execute(tag);
+            new NdefReaderTask(this).execute(tag);
         } else if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
 
             // In case we would still use the Tech Discovered Intent
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
             for (String tech : techList) {
                 if (searchedTech.equals(tech)) {
-                    new NdefReaderTask().execute(tag);
+                    new NdefReaderTask(this).execute(tag);
                     break;
                 }
             }
@@ -161,6 +161,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class NdefReaderTask extends AsyncTask<Tag, Void, String> {
+
+        private Context context;
+
+        public NdefReaderTask (Context context) {
+            this.context = context;
+        }
 
         @Override
         protected String doInBackground(Tag... params) {
@@ -219,7 +225,9 @@ public class MainActivity extends AppCompatActivity {
         private String readURL(NdefRecord record) throws UnsupportedEncodingException {
             Uri url = record.toUri();
 
-            ElGamalVerifier verifier = new ElGamalVerifier(publicKeyMap);
+//            ElGamalVerifier verifier = new ElGamalVerifier(publicKeyMap);
+
+            ECDSAVerifier verifier = new ECDSAVerifier(context);
 
             if (verifier.verify(url.toString())) {
                 runOnUiThread(new Runnable() {

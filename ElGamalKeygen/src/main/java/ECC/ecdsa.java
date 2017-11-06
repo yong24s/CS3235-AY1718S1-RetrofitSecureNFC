@@ -29,7 +29,7 @@ public class ecdsa {
 
     public static String GenerateSignature(String plaintext, PrivateKey privateKey) throws SignatureException,
             UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException {
-        Signature ecdsaSign = Signature.getInstance("SHA384withECDSA", "BC");
+        Signature ecdsaSign = Signature.getInstance("SHA512withECDSA", "BC");
         ecdsaSign.initSign(privateKey);
         ecdsaSign.update(plaintext.getBytes("UTF-8"));
         byte[] signature = ecdsaSign.sign();
@@ -38,7 +38,7 @@ public class ecdsa {
 
     public static boolean ValidateSignature(String plaintext, PublicKey publicKey, String signature) throws SignatureException,
             InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchProviderException {
-        Signature ecdsaVerify = Signature.getInstance("SHA384withECDSA", "BC");
+        Signature ecdsaVerify = Signature.getInstance("SHA512withECDSA", "BC");
         ecdsaVerify.initVerify(publicKey);
         ecdsaVerify.update(plaintext.getBytes("UTF-8"));
         
@@ -71,7 +71,7 @@ public class ecdsa {
         System.out.println(privateKey.toString());
         System.out.println(publicKey.toString());
 
-         String plaintext = "Simple plain text";
+         String plaintext = "http://ccmobilelife.sg/p2186/3q/97h";
         // GetTimestamp("Key Generation started: ");
         // KeyPair keys = GenerateKeys();
         // System.out.println(keys.getPublic().toString());
@@ -82,9 +82,10 @@ public class ecdsa {
          String signature = GenerateSignature(plaintext, privateKey);
          GetTimestamp("Signature Generation ended: ");
          
-         System.out.println(signature);
-         System.out.println(signature.length());
-        
+         String url = plaintext + "?sig=" + signature;
+         System.out.println(url);
+         
+         System.out.println(url.length());
          GetTimestamp("Validation started: ");
          boolean isValidated = ValidateSignature(plaintext, publicKey, signature);
          System.out.println("Result: " + isValidated);

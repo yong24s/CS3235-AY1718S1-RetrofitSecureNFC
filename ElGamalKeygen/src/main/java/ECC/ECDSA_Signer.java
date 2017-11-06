@@ -30,11 +30,11 @@ public class ECDSA_Signer {
 //        PrivateKey privateKey = factory.generatePrivate(spec);
         
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-        Reader rdr = new StringReader("-----BEGIN PRIVATE KEY-----\n"
-                +"MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQglm42vhKLVyCh1Vi6\n"
-                +"Bio04jbv7FNf4ar3+MGWPI1748GhRANCAATDDYxtnaXQDOJQd9tGaPKJd3+t2YaX\n"
-                +"cTbYdfrjiKnDv7sY2WRFqzwS7uIRsKKlJUTj3ZNu8G2Uf16q4mQcoxyP\n"
-                +"-----END PRIVATE KEY-----"); // or from file etc.
+        Reader rdr = new StringReader("-----BEGIN PRIVATE KEY-----\n" +
+                "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgvVDmildtbRaYT4S2\n" +
+                "N9ZG9M8zDHUZNrtvUBA8X8HP0r6hRANCAASgkUnH4WTKOt+TMwddEeyHpHgQ8PuX\n" +
+                "GpaP2ol32IwlWeDi+EcmHX56HNcJ8DrkayvuoqfI4W6b6A3TIUuhQy4H\n" +
+                "-----END PRIVATE KEY-----"); // or from file etc.
 
         try {
             org.bouncycastle.util.io.pem.PemObject spki;
@@ -69,30 +69,33 @@ public class ECDSA_Signer {
 //                +"l3E22HX644ipw7+7GNlkRas8Eu7iEbCipSVE492TbvBtlH9equJkHKMcjw==\n"
 //                +"-----END PUBLIC KEY-----\n"); // or from file etc.
 
-        Reader rdr = new StringReader("-----BEGIN CERTIFICATE-----\n" + 
-"MIIB2zCCAYGgAwIBAgIJAJ9UWB+CT5q7MAoGCCqGSM49BAMCMEoxCzAJBgNVBAYT\n"+
-"AlNHMQswCQYDVQQIDAJTRzELMAkGA1UEBwwCU0cxITAfBgNVBAoMGEludGVybmV0\n"+
-"IFdpZGdpdHMgUHR5IEx0ZDAeFw0xNzExMDUxNzA4NDlaFw0xODExMDUxNzA4NDla\n"+
-"MEoxCzAJBgNVBAYTAlNHMQswCQYDVQQIDAJTRzELMAkGA1UEBwwCU0cxITAfBgNV\n"+
-"BAoMGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDBZMBMGByqGSM49AgEGCCqGSM49\n"+
-"AwEHA0IABMMNjG2dpdAM4lB320Zo8ol3f63ZhpdxNth1+uOIqcO/uxjZZEWrPBLu\n"+
-"4hGwoqUlROPdk27wbZR/XqriZByjHI+jUDBOMB0GA1UdDgQWBBT6J4jHCuOlkvxd\n"+
-"jSIhQa+638yX0zAfBgNVHSMEGDAWgBT6J4jHCuOlkvxdjSIhQa+638yX0zAMBgNV\n"+
-"HRMEBTADAQH/MAoGCCqGSM49BAMCA0gAMEUCIC01ZqikAUV0im38RqW3JE+k6SPq\n"+
-"o+rAiXXWXoGCzRL+AiEA4L3NC0muqSh+MZRXy31AAjh/hmiybjbsG6ZoJJGNSis=\n"+
-"-----END CERTIFICATE-----"); // or from file etc.
+//        Reader rdr = new StringReader("-----BEGIN CERTIFICATE-----\n" + 
+//"MIIB2zCCAYGgAwIBAgIJAJ9UWB+CT5q7MAoGCCqGSM49BAMCMEoxCzAJBgNVBAYT\n"+
+//"AlNHMQswCQYDVQQIDAJTRzELMAkGA1UEBwwCU0cxITAfBgNVBAoMGEludGVybmV0\n"+
+//"IFdpZGdpdHMgUHR5IEx0ZDAeFw0xNzExMDUxNzA4NDlaFw0xODExMDUxNzA4NDla\n"+
+//"MEoxCzAJBgNVBAYTAlNHMQswCQYDVQQIDAJTRzELMAkGA1UEBwwCU0cxITAfBgNV\n"+
+//"BAoMGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDBZMBMGByqGSM49AgEGCCqGSM49\n"+
+//"AwEHA0IABMMNjG2dpdAM4lB320Zo8ol3f63ZhpdxNth1+uOIqcO/uxjZZEWrPBLu\n"+
+//"4hGwoqUlROPdk27wbZR/XqriZByjHI+jUDBOMB0GA1UdDgQWBBT6J4jHCuOlkvxd\n"+
+//"jSIhQa+638yX0zAfBgNVHSMEGDAWgBT6J4jHCuOlkvxdjSIhQa+638yX0zAMBgNV\n"+
+//"HRMEBTADAQH/MAoGCCqGSM49BAMCA0gAMEUCIC01ZqikAUV0im38RqW3JE+k6SPq\n"+
+//"o+rAiXXWXoGCzRL+AiEA4L3NC0muqSh+MZRXy31AAjh/hmiybjbsG6ZoJJGNSis=\n"+
+//"-----END CERTIFICATE-----"); // or from file etc.
         
         String str = ("-----BEGIN CERTIFICATE-----\n" + 
-                "MIIB2zCCAYGgAwIBAgIJAJ9UWB+CT5q7MAoGCCqGSM49BAMCMEoxCzAJBgNVBAYT\n"+
-                "AlNHMQswCQYDVQQIDAJTRzELMAkGA1UEBwwCU0cxITAfBgNVBAoMGEludGVybmV0\n"+
-                "IFdpZGdpdHMgUHR5IEx0ZDAeFw0xNzExMDUxNzA4NDlaFw0xODExMDUxNzA4NDla\n"+
-                "MEoxCzAJBgNVBAYTAlNHMQswCQYDVQQIDAJTRzELMAkGA1UEBwwCU0cxITAfBgNV\n"+
-                "BAoMGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDBZMBMGByqGSM49AgEGCCqGSM49\n"+
-                "AwEHA0IABMMNjG2dpdAM4lB320Zo8ol3f63ZhpdxNth1+uOIqcO/uxjZZEWrPBLu\n"+
-                "4hGwoqUlROPdk27wbZR/XqriZByjHI+jUDBOMB0GA1UdDgQWBBT6J4jHCuOlkvxd\n"+
-                "jSIhQa+638yX0zAfBgNVHSMEGDAWgBT6J4jHCuOlkvxdjSIhQa+638yX0zAMBgNV\n"+
-                "HRMEBTADAQH/MAoGCCqGSM49BAMCA0gAMEUCIC01ZqikAUV0im38RqW3JE+k6SPq\n"+
-                "o+rAiXXWXoGCzRL+AiEA4L3NC0muqSh+MZRXy31AAjh/hmiybjbsG6ZoJJGNSis=\n"+
+                "MIICWjCCAgGgAwIBAgIJAMsd11jSMscIMAoGCCqGSM49BAMCMIGJMQswCQYDVQQG\n" +
+                "EwJTRzESMBAGA1UECAwJU2luZ2Fwb3JlMRIwEAYDVQQHDAlTaW5nYXBvcmUxGDAW\n" +
+                "BgNVBAoMD2NjbW9iaWxlbGlmZS5zZzEYMBYGA1UEAwwPY2Ntb2JpbGVsaWZlLnNn\n" +
+                "MR4wHAYJKoZIhvcNAQkBFg9jY21vYmlsZWxpZmUuc2cwHhcNMTcxMTA1MjM0MzQ5\n" +
+                "WhcNMTgxMTA1MjM0MzQ5WjCBiTELMAkGA1UEBhMCU0cxEjAQBgNVBAgMCVNpbmdh\n" +
+                "cG9yZTESMBAGA1UEBwwJU2luZ2Fwb3JlMRgwFgYDVQQKDA9jY21vYmlsZWxpZmUu\n" +
+                "c2cxGDAWBgNVBAMMD2NjbW9iaWxlbGlmZS5zZzEeMBwGCSqGSIb3DQEJARYPY2Nt\n" +
+                "b2JpbGVsaWZlLnNnMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEoJFJx+Fkyjrf\n" +
+                "kzMHXRHsh6R4EPD7lxqWj9qJd9iMJVng4vhHJh1+ehzXCfA65Gsr7qKnyOFum+gN\n" +
+                "0yFLoUMuB6NQME4wHQYDVR0OBBYEFAclflYeL3EyDxwbEGNgy+7c3KZSMB8GA1Ud\n" +
+                "IwQYMBaAFAclflYeL3EyDxwbEGNgy+7c3KZSMAwGA1UdEwQFMAMBAf8wCgYIKoZI\n" +
+                "zj0EAwIDRwAwRAIgYuCguzcicmHRPSlNSIU1PEHZilrOZZzUpPqRVbQbwzoCIAdJ\n" +
+                "kL+MJoTVT5zkLEZJy3fI2voORsqOHpqGKcBouk3P\n" +
                 "-----END CERTIFICATE-----"); 
       
         try {
