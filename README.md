@@ -4,22 +4,24 @@ Retrofitting NTAG203/213 with ElGamal Signature Scheme!
 
 ## Generating certs
 
-openssl ecparam -genkey -name prime256v1 -noout -out tmp.pem 
-> discard this as we need PKCS#8 padded cert
-openssl pkcs8 -topk8 -nocrypt -in tmp.pem -out key.pem 
-> keep this as private key
+openssl ecparam -genkey -name prime256v1 -noout -out tmp.pem  <br/>
+> discard this as we need PKCS#8 padded cert <br/>
 
-openssl ec -in key.pem -pubout -out pub.pem 
-> Not used
+openssl pkcs8 -topk8 -nocrypt -in tmp.pem -out key.pem  <br/>
+> keep this as private key <br/>
 
-openssl req -new -sha256 -key key.pem -out csr.csr
-> discard after use
-openssl req -x509 -sha256 -days 365 -key key.pem -in csr.csr -out certificate.pem 
-> keep this as public key
+openssl ec -in key.pem -pubout -out pub.pem  <br/>
+> Not used <br/>
 
-openssl x509 -in certificate.pem -text -noout 
-openssl x509 -in key.pem -text -noout 
-> for printing
+openssl req -new -sha256 -key key.pem -out csr.csr <br/>
+> discard after use <br/>
+
+openssl req -x509 -sha256 -days 365 -key key.pem -in csr.csr -out certificate.pem  <br/>
+> keep this as public key <br/>
+
+openssl x509 -in certificate.pem -text -noout  <br/>
+openssl x509 -in key.pem -text -noout  <br/>
+> for printing <br/>
 
 ## ccmobilelife.sg
 > save file as domain name e.g. ccmobilelife.sg in android assets
