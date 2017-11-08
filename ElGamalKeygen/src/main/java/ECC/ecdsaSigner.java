@@ -60,7 +60,7 @@ public class ecdsaSigner {
 
     public static String GenerateSignature(String plaintext, PrivateKey privateKey) throws SignatureException,
             UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException {
-        Signature ecdsaSign = Signature.getInstance("SHA512withECDSA", "BC");
+        Signature ecdsaSign = Signature.getInstance("SHA384withECDSA", "BC");
         ecdsaSign.initSign(privateKey);
         ecdsaSign.update(plaintext.getBytes("UTF-8"));
         byte[] signature_binary = ecdsaSign.sign();

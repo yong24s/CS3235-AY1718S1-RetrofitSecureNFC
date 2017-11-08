@@ -57,7 +57,7 @@ public class ecdsaVerifier {
     public static boolean ValidateSignature(String plaintext, PublicKey publicKey, String signature)
             throws SignatureException, InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException,
             NoSuchProviderException {
-        Signature ecdsaVerify = Signature.getInstance("SHA512withECDSA", "BC");
+        Signature ecdsaVerify = Signature.getInstance("SHA384withECDSA", "BC");
         ecdsaVerify.initVerify(publicKey);
         ecdsaVerify.update(plaintext.getBytes("UTF-8"));
 
@@ -90,7 +90,7 @@ public class ecdsaVerifier {
                     final String url = url_all.substring(0, index);
                     final String sig = url_all.substring(index).replace("?sig=", "");
                     
-                    System.out.println("VERIFIABLE?  " + ValidateSignature(url, publicKey, sig));                    
+                    System.out.println("VERIFIED: " + ValidateSignature(url, publicKey, sig));                    
                 } else {
                     System.out.println("ERROR url has no signature");
                 }
@@ -100,6 +100,7 @@ public class ecdsaVerifier {
 
         } catch (Exception ex) {
             System.out.println("ERROR Invalid path");
+            ex.printStackTrace();
         } finally {
             sc.close();
         }
