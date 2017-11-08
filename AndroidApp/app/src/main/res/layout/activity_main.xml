@@ -5,19 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.retrofit.nfc.retrofitsecurenfc.MainActivity">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:orientation="vertical" >
 
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Hello World!"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--app:layout_constraintRight_toRightOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent" />-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textSize="20sp"
+        android:paddingTop="20sp"
+        android:paddingBottom="20sp"
+        android:text="Approach a Tag"/>
+
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
+            android:gravity="top"
+            android:src="@drawable/nfc_white" />
+
+    <!--android:layout_height="wrap_content"-->
     <TextView
         android:id="@+id/textView_explanation"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/explanation" />
+        android:gravity="bottom"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:text="@string/explanation"/>
 
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

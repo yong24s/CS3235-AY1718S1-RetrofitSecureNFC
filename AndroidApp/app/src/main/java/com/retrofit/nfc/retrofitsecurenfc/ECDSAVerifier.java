@@ -38,7 +38,7 @@ import android.util.Base64;
 
 public class ECDSAVerifier {
 
-    private static final Pattern domainPattern = Pattern.compile("^(?:(?:http[s]?):\\/)?\\/?(?:[^:\\/\\s]+?\\.)*([^:\\/\\s]+\\.[^:\\/\\s]+)");
+    private static final Pattern domainPattern = Pattern.compile("https?:\\/\\/(?:www\\.)?([-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b)*(\\/[\\/\\d\\w\\.-]*)*(?:[\\?])*(.+)*");
     private static final Pattern getSigParams = Pattern.compile("sig=(.+)$");
 
     private String domain;

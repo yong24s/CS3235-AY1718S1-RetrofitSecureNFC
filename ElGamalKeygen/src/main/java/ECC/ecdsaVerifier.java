@@ -90,7 +90,7 @@ public class ecdsaVerifier {
                     final String url = url_all.substring(0, index);
                     final String sig = url_all.substring(index).replace("?sig=", "");
                     
-                    System.out.println("VERIFIABLE? => " + ValidateSignature(url, publicKey, sig));                    
+                    System.out.println("VERIFIABLE?  " + ValidateSignature(url, publicKey, sig));                    
                 } else {
                     System.out.println("ERROR url has no signature");
                 }
