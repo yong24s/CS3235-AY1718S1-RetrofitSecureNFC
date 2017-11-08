@@ -46,6 +46,10 @@ public class ECDSAVerifier {
 
     private Context context;
 
+    static {
+        Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
+    }
+
     public ECDSAVerifier(Context context) {
         this.context = context;
     }
