@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 //        init();
-//        handleIntent(getIntent());
+        handleIntent(getIntent());
     }
 
     @Override
