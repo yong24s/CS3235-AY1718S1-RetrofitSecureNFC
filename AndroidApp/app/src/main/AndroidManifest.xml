@@ -10,26 +10,41 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
+
+            <!--<intent-filter android:label="@string/app_name">-->
+                <!--<action android:name="android.nfc.action.NDEF_DISCOVERED" />-->
+                <!--<data android:scheme="http"-->
+                    <!--android:host="commonsware.com"-->
+                    <!--android:path="/nfctest"-->
+                    <!--/>-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <action android:name="android.nfc.action.TAG_DISCOVERED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
 
+                <!--List of sites we tell Android that we can handle with NDEF -->
                 <data
                     android:host="ccmobilelife.sg"
                     android:scheme="http" />
+                <data
+                    android:host="*.nus.edu.sg"
+                    android:scheme="http" />
 
+                <!-- THIS IS A NEGATIVE CASE, FOR EASY DEMO -->
                 <data
                     android:host="*.pleasecarry.me"
-                    android:pathPattern=".*"
-                    android:scheme="http" /> />
-
-                <!--<data android:mimeType="text/plain" />-->
-
+                    android:scheme="http" />
             </intent-filter>
-
-
-
 
             <!--<intent-filter>-->
                 <!--<action android:name="android.nfc.action.TECH_DISCOVERED" />-->
@@ -39,11 +54,6 @@
                 <!--android:name="android.nfc.action.TECH_DISCOVERED"-->
                 <!--android:resource="@xml/nfc_tech_filter" />-->
 
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
@@ -52,5 +62,4 @@
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="true" />
-
 </manifest>

@@ -59,12 +59,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (!mNfcAdapter.isEnabled()) {
             mTextView.setText("NFC is disabled.");
-        } else {
-            mTextView.setText(R.string.explanation);
         }
 
-        init();
-        handleIntent(getIntent());
+//        init();
+//        handleIntent(getIntent());
     }
 
     @Override
@@ -105,29 +103,36 @@ public class MainActivity extends AppCompatActivity {
      * @param adapter The {@link NfcAdapter} used for the foreground dispatch.
      */
     public static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
-        final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+        IntentFilter ndefDetected = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        IntentFilter techDetected = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
 
-        final PendingIntent pendingIntent =
-                PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
+        IntentFilter[] nfcIntentFilter = new IntentFilter[]{techDetected,tagDetected,ndefDetected};
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                activity, 0, new Intent(activity, activity.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        adapter.enableForegroundDispatch(activity, pendingIntent, nfcIntentFilter, null);
 
-        IntentFilter[] filters = new IntentFilter[1];
-        String[][] techList = new String[][]{};
-//        String[][] techList = new String[][]{new String[] { android.nfc.tech.Ndef.class.getName() }};
-
-        // Notice that this is the same filter as in our manifest.
-        filters[0] = new IntentFilter();
-        filters[0].addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
-        filters[0].addCategory(Intent.CATEGORY_DEFAULT);
-
-        try {
-//            filters[0].addDataType(MIME_TEXT_PLAIN);
-            filters[0].addDataType("*/*");
-        } catch (MalformedMimeTypeException e) {
-            throw new RuntimeException("Check your mime type.");
-        }
-
-        adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
+//        final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
+//        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//
+//        final PendingIntent pendingIntent =
+//                PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
+//
+//        IntentFilter[] filters = new IntentFilter[1];
+//        String[][] techList = new String[][]{};
+//
+//        // Notice that this is the same filter as in our manifest.
+//        filters[0] = new IntentFilter();
+//        filters[0].addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
+//        filters[0].addCategory(Intent.CATEGORY_DEFAULT);
+//
+//        try {
+//            filters[0].addDataType("*/*");
+//        } catch (MalformedMimeTypeException e) {
+//            throw new RuntimeException("Check your mime type.");
+//        }
+//
+//        adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
     }
 
     /**
@@ -141,22 +146,33 @@ public class MainActivity extends AppCompatActivity {
     private void handleIntent(Intent intent) {
         String action = intent.getAction();
 
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            new NdefReaderTask(this).execute(tag);
-        } else if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
+//        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+//            Toast.makeText(MainActivity.this, "NDEF", Toast.LENGTH_SHORT).show();
+//
+//            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+//            new NdefReaderTask(this).execute(tag);
+//        } else if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
+//            Toast.makeText(MainActivity.this, "TECH", Toast.LENGTH_SHORT).show();
+//
+//            // In case we would still use the Tech Discovered Intent
+//            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+//            String[] techList = tag.getTechList();
+//            String searchedTech = Ndef.class.getName();
+//
+//            for (String tech : techList) {
+//                if (searchedTech.equals(tech)) {
+//                    new NdefReaderTask(this).execute(tag);
+//                    break;
+//                }
+//            }
+//        }
 
-            // In case we would still use the Tech Discovered Intent
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            String[] techList = tag.getTechList();
-            String searchedTech = Ndef.class.getName();
-
-            for (String tech : techList) {
-                if (searchedTech.equals(tech)) {
-                    new NdefReaderTask(this).execute(tag);
-                    break;
-                }
-            }
+        switch (action) {
+            case NfcAdapter.ACTION_TAG_DISCOVERED :
+            case NfcAdapter.ACTION_NDEF_DISCOVERED :
+            case NfcAdapter.ACTION_TECH_DISCOVERED :
+                Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                new NdefReaderTask(this).execute(tag);
         }
     }
 
@@ -225,14 +241,12 @@ public class MainActivity extends AppCompatActivity {
         private String readURL(NdefRecord record) throws UnsupportedEncodingException {
             Uri url = record.toUri();
 
-//            ElGamalVerifier verifier = new ElGamalVerifier(publicKeyMap);
-
             ECDSAVerifier verifier = new ECDSAVerifier(context);
 
             if (verifier.verify(url.toString())) {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(MainActivity.this, ":D This NFC Tag is verified! Opening it...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, ":D This NFC Tag is verified! Opening it...", Toast.LENGTH_LONG).show();
                     }
                 });
 
