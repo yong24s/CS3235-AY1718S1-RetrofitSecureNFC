@@ -23,22 +23,13 @@ import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.util.Log;
 
+/*
+* Credits to Ralf Wondratschek for creating a wonderful guide to Android NFC programming.
+* https://code.tutsplus.com/tutorials/reading-nfc-tags-with-android--mobile-17278
+* */
 public class MainActivity extends AppCompatActivity {
-    public static final String MIME_TEXT_PLAIN = "text/plain";
-
     private TextView mTextView;
     private NfcAdapter mNfcAdapter;
-
-    private void init() {
-//        String[] keys = this.getResources().getStringArray(R.array.publickeys_domain);
-//        String[] values = this.getResources().getStringArray(R.array.publickeys_p_g_h);
-//
-//        publicKeyMap = new LinkedHashMap<String,PublicKey>();
-//
-//        for (int i = 0; i < Math.min(keys.length, values.length); ++i) {
-//            publicKeyMap.put(keys[i], new PublicKey(values[i]));
-//        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (mNfcAdapter == null) {
             // Stop here, we definitely need NFC
-            Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Sorry! this device doesn't support NFC.", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -59,48 +50,27 @@ public class MainActivity extends AppCompatActivity {
             mTextView.setText("NFC is disabled.");
         }
 
-//        init();
         handleIntent(getIntent());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        /**
-         * It's important, that the activity is in the foreground (resumed). Otherwise
-         * an IllegalStateException is thrown.
-         */
-        //mNfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFiltersArray, techListsArray);
         setupForegroundDispatch(this, mNfcAdapter);
     }
 
     @Override
     protected void onPause() {
-        /**
-         * Call this before onPause, otherwise an IllegalArgumentException is thrown as well.
-         */
         stopForegroundDispatch(this, mNfcAdapter);
         super.onPause();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        /**
-         * This method gets called, when a new Intent gets associated with the current activity instance.
-         * Instead of creating a new activity, onNewIntent will be called. For more information have a look
-         * at the documentation.
-         *
-         * In our case this method gets called, when the user attaches a Tag to the device.
-         */
         handleIntent(intent);
     }
 
-    /**
-     * @param activity The corresponding {@link Activity} requesting the foreground dispatch.
-     * @param adapter The {@link NfcAdapter} used for the foreground dispatch.
-     */
-    public static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+    private static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         IntentFilter ndefDetected = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         IntentFilter techDetected = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
@@ -109,61 +79,14 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 activity, 0, new Intent(activity, activity.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         adapter.enableForegroundDispatch(activity, pendingIntent, nfcIntentFilter, null);
-
-//        final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
-//        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//
-//        final PendingIntent pendingIntent =
-//                PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
-//
-//        IntentFilter[] filters = new IntentFilter[1];
-//        String[][] techList = new String[][]{};
-//
-//        // Notice that this is the same filter as in our manifest.
-//        filters[0] = new IntentFilter();
-//        filters[0].addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
-//        filters[0].addCategory(Intent.CATEGORY_DEFAULT);
-//
-//        try {
-//            filters[0].addDataType("*/*");
-//        } catch (MalformedMimeTypeException e) {
-//            throw new RuntimeException("Check your mime type.");
-//        }
-//
-//        adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
     }
 
-    /**
-     * @param activity The corresponding {@link BaseActivity} requesting to stop the foreground dispatch.
-     * @param adapter The {@link NfcAdapter} used for the foreground dispatch.
-     */
-    public static void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+    private static void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
         adapter.disableForegroundDispatch(activity);
     }
 
     private void handleIntent(Intent intent) {
         String action = intent.getAction();
-
-//        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
-//            Toast.makeText(MainActivity.this, "NDEF", Toast.LENGTH_SHORT).show();
-//
-//            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-//            new NdefReaderTask(this).execute(tag);
-//        } else if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
-//            Toast.makeText(MainActivity.this, "TECH", Toast.LENGTH_SHORT).show();
-//
-//            // In case we would still use the Tech Discovered Intent
-//            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-//            String[] techList = tag.getTechList();
-//            String searchedTech = Ndef.class.getName();
-//
-//            for (String tech : techList) {
-//                if (searchedTech.equals(tech)) {
-//                    new NdefReaderTask(this).execute(tag);
-//                    break;
-//                }
-//            }
-//        }
 
         switch (action) {
             case NfcAdapter.ACTION_TAG_DISCOVERED :
