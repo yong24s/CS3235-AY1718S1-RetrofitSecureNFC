@@ -1,49 +1,32 @@
 # RetrofitSecureNFC
 
-Retrofitting NTAG203/213 with ElGamal Signature Scheme!
+Retrofitting cheap and low storage NTAG203/213 with Elliptic Curve Digital Signature Algorithm (ECDSA)!
 
-## Generating certs
+## How to use
 
-openssl ecparam -genkey -name prime256v1 -noout -out tmp.pem  <br/>
-> discard this as we need PKCS#8 padded cert <br/>
+1. Generate an ECC private key and a self-signed ECC public certificate <br/>
+> *Read: How to generate ECC keys/certificates*
+2. Run **EcdsaSigner.java** in KeyGenerator Project to sign an URL with your ECC private key <br/>
+3. [OPTIONAL] Run **EcdsaVerifier.java** in KeyGenerator Project to verify the signed URL with your ECC public certificate <br/>
+
+## How to generate ECC keys/certificates
+
+First, pick a named curve that fits your security requirements and NFC storage space. <br/>
+> openssl ecparam -list_curves <br/>
+> The following command assumes that **prime256v1** is chosen. <br/>
+
+openssl ecparam -genkey -name **prime256v1** -noout -out tmp.pem  <br/>
+> Discard this later as we need a PKCS#8 padded private key *Read: Known Issues*<br/>
 
 openssl pkcs8 -topk8 -nocrypt -in tmp.pem -out key.pem  <br/>
-> keep this as private key <br/>
-
-openssl ec -in key.pem -pubout -out pub.pem  <br/>
-> Not used <br/>
+> Keep this as the ECC private key <br/>
 
 openssl req -new -sha256 -key key.pem -out csr.csr <br/>
-> discard after use <br/>
+> Create a certificate signing request (CSR) <br/>
 
 openssl req -x509 -sha256 -days 365 -key key.pem -in csr.csr -out certificate.pem  <br/>
-> keep this as public key <br/>
+> Keep this as the ECC public certifcate <br/>
 
+The following commands can be used to print the content of key and certifcate.
 openssl x509 -in certificate.pem -text -noout  <br/>
 openssl x509 -in key.pem -text -noout  <br/>
-> for printing <br/>
-
-## ccmobilelife.sg
-> save file as domain name e.g. ccmobilelife.sg in android assets
-
------BEGIN CERTIFICATE-----
-MIICWjCCAgGgAwIBAgIJAMsd11jSMscIMAoGCCqGSM49BAMCMIGJMQswCQYDVQQG
-EwJTRzESMBAGA1UECAwJU2luZ2Fwb3JlMRIwEAYDVQQHDAlTaW5nYXBvcmUxGDAW
-BgNVBAoMD2NjbW9iaWxlbGlmZS5zZzEYMBYGA1UEAwwPY2Ntb2JpbGVsaWZlLnNn
-MR4wHAYJKoZIhvcNAQkBFg9jY21vYmlsZWxpZmUuc2cwHhcNMTcxMTA1MjM0MzQ5
-WhcNMTgxMTA1MjM0MzQ5WjCBiTELMAkGA1UEBhMCU0cxEjAQBgNVBAgMCVNpbmdh
-cG9yZTESMBAGA1UEBwwJU2luZ2Fwb3JlMRgwFgYDVQQKDA9jY21vYmlsZWxpZmUu
-c2cxGDAWBgNVBAMMD2NjbW9iaWxlbGlmZS5zZzEeMBwGCSqGSIb3DQEJARYPY2Nt
-b2JpbGVsaWZlLnNnMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEoJFJx+Fkyjrf
-kzMHXRHsh6R4EPD7lxqWj9qJd9iMJVng4vhHJh1+ehzXCfA65Gsr7qKnyOFum+gN
-0yFLoUMuB6NQME4wHQYDVR0OBBYEFAclflYeL3EyDxwbEGNgy+7c3KZSMB8GA1Ud
-IwQYMBaAFAclflYeL3EyDxwbEGNgy+7c3KZSMAwGA1UdEwQFMAMBAf8wCgYIKoZI
-zj0EAwIDRwAwRAIgYuCguzcicmHRPSlNSIU1PEHZilrOZZzUpPqRVbQbwzoCIAdJ
-kL+MJoTVT5zkLEZJy3fI2voORsqOHpqGKcBouk3P
------END CERTIFICATE-----
-
------BEGIN PRIVATE KEY-----
-MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgvVDmildtbRaYT4S2
-N9ZG9M8zDHUZNrtvUBA8X8HP0r6hRANCAASgkUnH4WTKOt+TMwddEeyHpHgQ8PuX
-GpaP2ol32IwlWeDi+EcmHX56HNcJ8DrkayvuoqfI4W6b6A3TIUuhQy4H
------END PRIVATE KEY-----
