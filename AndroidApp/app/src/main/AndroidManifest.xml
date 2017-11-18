@@ -24,9 +24,6 @@
 
                 <!--List of sites we tell Android that we can handle with NDEF -->
                 <data
-                    android:host="ccmobilelife.sg"
-                    android:scheme="http" />
-                <data
                     android:host="*.nus.edu.sg"
                     android:scheme="http" />
 
