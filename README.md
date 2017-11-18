@@ -30,3 +30,14 @@ openssl req -x509 -sha256 -days 365 -key key.pem -in csr.csr -out certificate.pe
 The following commands can be used to print the content of key and certifcate.
 openssl x509 -in certificate.pem -text -noout  <br/>
 openssl x509 -in key.pem -text -noout  <br/>
+
+## Known issues
+
+EcdsaSigner.java uses BouncyCastle crypto library for ECDSA. <br/>
+In line 42, it uses a PKCS8EncodedKeySpec wrap a PemObject instance. <br/>
+As for now, the conversion to PKCS#8 is needed as I have not figured out another way to inflate ECC private key yet. <br/>
+
+In our school project, we assume that the companies can create their own signer (and not bound to any programming languages) as ECDSA is an open and well-defined. The only thing we have to agree on is which secure hash to use and we are using SHA384.
+
+> Link to line 42 of EcdsaSigner.java <br/> https://github.com/yong24s/CS3235-AY1718S1-RetrofitSecureNFC/blob/afef89f0ce0225a0b5aa44b9ca8824889314c3f3/KeyGenerator/src/main/java/ECC/EcdsaSigner.java#L42
+> Link to StackOverflow solution: https://stackoverflow.com/questions/22963581/reading-elliptic-curve-private-key-from-file-with-bouncycastle#comment71074675_23369629
