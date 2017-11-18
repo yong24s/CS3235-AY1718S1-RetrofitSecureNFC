@@ -1,6 +1,6 @@
 # RetrofitSecureNFC
 
-![rsn logo][https://raw.githubusercontent.com/yong24s/CS3235-AY1718S1-RetrofitSecureNFC/master/rsn.jpg]
+![rsn logo](https://raw.githubusercontent.com/yong24s/CS3235-AY1718S1-RetrofitSecureNFC/master/rsn.jpg)
 
 Retrofitting cheap and low storage NTAG203/213 with Elliptic Curve Digital Signature Algorithm (ECDSA)!
 
