@@ -12,11 +12,9 @@ import android.widget.Toast;
 
 import android.app.PendingIntent;
 import android.content.IntentFilter;
-import android.content.IntentFilter.MalformedMimeTypeException;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
