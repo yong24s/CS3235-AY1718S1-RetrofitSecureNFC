@@ -8,6 +8,11 @@ Retrofitting cheap and low storage NTAG203/213 with Elliptic Curve Digital Signa
 > *Read: How to generate ECC keys/certificates*
 2. Run **EcdsaSigner.java** in KeyGenerator Project to sign an URL with your ECC private key <br/>
 3. [OPTIONAL] Run **EcdsaVerifier.java** in KeyGenerator Project to verify the signed URL with your ECC public certificate <br/>
+4. Write the signed URL to a NFC tag 
+5. Update AndroidManifest.xml to include new signed domain
+6. Rename your ECC public certificate to your fully qualified domain name i.e. isteps.comp.nus.edu.sg
+7. Deploy the Android application to a Android phone with NFC
+8. Test it out and have fun!
 
 ## How to generate ECC keys/certificates
 
@@ -41,3 +46,7 @@ In our school project, we assume that the companies can create their own signer 
 
 > Link to line 42 of EcdsaSigner.java <br/> https://github.com/yong24s/CS3235-AY1718S1-RetrofitSecureNFC/blob/afef89f0ce0225a0b5aa44b9ca8824889314c3f3/KeyGenerator/src/main/java/ECC/EcdsaSigner.java#L42 <br/>
 > Link to StackOverflow solution: https://stackoverflow.com/questions/22963581/reading-elliptic-curve-private-key-from-file-with-bouncycastle#comment71074675_23369629
+
+## Credits
+Ralf Wondratschek for his awesome guide on Android NFC Programming <br/>
+> Link https://code.tutsplus.com/tutorials/reading-nfc-tags-with-android--mobile-17278
