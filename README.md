@@ -13,8 +13,10 @@ Retrofitting cheap and low storage NTAG203/213 with Elliptic Curve Digital Signa
 4. Write the signed URL to a NFC tag 
 5. Update AndroidManifest.xml to include new signed domain
 6. Rename your ECC public certificate to your fully qualified domain name i.e. isteps.comp.nus.edu.sg
-7. Deploy the Android application to a Android phone with NFC
-8. Test it out and have fun!
+7. Copy the renamed ECC public certificate the **asserts/certs** folder
+> AndroidApp/app/src/main/assets/certs/
+8. Deploy the Android application to a Android phone with NFC
+9. Test it out and have fun!
 
 ## How to generate ECC keys/certificates
 
